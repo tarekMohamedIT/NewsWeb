@@ -1,0 +1,151 @@
+﻿@model IEnumerable<NewsWeb.Models.News>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="form-inline my-2 my-lg-0">
+    <p>Search by author  </p>
+    <textarea id="authorName"></textarea>
+    <button id="searchFor" class="btn btn-secondary my-2 my-sm-0">Search</button>
+</div>
+    <br /><br />
+<table class="table table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ArticleTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ArticleBody)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PublicationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tbody id="articles">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArticleTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArticleBody)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublicationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.NewsID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.NewsID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.NewsID })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+}
+
+else
+{
+    <h1>You are not authorised to see this page!</h1>
+}
+
+@section scripts{
+    
+    <script>
+        function search(data) {
+            $.ajax({
+                url: "/api/news/search/" + data,
+                type: 'GET',
+                success: function (data) {
+                    var row = "";
+                    $.each(data, function (index, item) {
+                        row += "<tr>"
+
+                        row += "<td>" + item.ArticleTitle + "</td>";
+                        row += "<td>" + item.ArticleBody + "</td>";
+                        row += "<td>" + item.ImageUrl + "</td>";
+                        row += "<td>" + item.AuthorName + "</td>";
+                        row += "<td>" + item.PublicationDate + "</td>";
+                        row += "<td>" + item.CreationDate + "</td>";
+
+                        row += "<td><a href='/News/Edit/" + item.NewsID + "'>Edit</a></td>";
+                        row += "<td><a href='/News/Details/" + item.NewsID + "'>Details</a></td>";
+                        row += "<td><a href='/News/Delete/" + item.NewsID + "'>Delete</a></td>";
+
+                        row += "</tr>";
+                    });
+                    $("#articles").html(row);
+                }
+            });
+        }
+
+
+
+        $(document).ready(function () {
+            $("#searchFor").click(function () {
+
+                search($("#authorName").val());
+
+            });
+
+            $.ajax({
+                url: "/api/news",
+                type: 'GET',
+                success: function (data) {
+                    var row = "";
+                    $.each(data, function (index, item) {
+                        row += "<tr>"
+
+                        row += "<td>" + item.ArticleTitle + "</td>";
+                        row += "<td>" + item.ArticleBody + "</td>";
+                        row += "<td>" + item.ImageUrl + "</td>";
+                        row += "<td>" + item.AuthorName + "</td>";
+                        row += "<td>" + item.PublicationDate + "</td>";
+                        row += "<td>" + item.CreationDate + "</td>";
+
+                        row += "<td><a href='/News/Edit/" + item.NewsID + "'>Edit</a></td>";
+                        row += "<td><a href='/News/Details/" + item.NewsID + "'>Details</a></td>";
+                        row += "<td><a href='/News/Delete/" + item.NewsID + "'>Delete</a></td>";
+
+                        row += "</tr>";
+                    });
+                    $("#articles").html(row);
+                }
+            });
+        });
+    </script>    
+    
+}
