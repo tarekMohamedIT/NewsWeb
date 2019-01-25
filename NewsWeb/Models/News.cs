@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NewsWeb.validators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace NewsWeb.Models
 
         public Author Author { get; set; }
 
-
+        [WithinAWeek(ErrorMessage = "The date must be between today and a week from today")]
         public DateTime PublicationDate { get; set; }
 
         public DateTime? CreationDate { get; set; }
