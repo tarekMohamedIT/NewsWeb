@@ -38,7 +38,12 @@ namespace NewsWeb.Controllers
         // GET: News/Create
         public ActionResult Create()
         {
-            return View();
+            var viewModel = new NewsViewModel
+            {
+                News = new News(),
+                Authors = db.AuthorsSet.ToList()
+            };
+            return View(viewModel);
         }
 
         // POST: News/Create
@@ -56,12 +61,13 @@ namespace NewsWeb.Controllers
                 return RedirectToAction("Index");
             }
 
-            NewsViewModel viewModel = new NewsViewModel
+            var viewModel = new NewsViewModel
             {
                 News = news,
                 Authors = db.AuthorsSet.ToList()
             };
 
+            
             return View(viewModel);
         }
 
