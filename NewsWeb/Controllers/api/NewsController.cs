@@ -19,7 +19,7 @@ namespace NewsWeb.Controllers.api
         // GET: api/News
         public IQueryable<News> GetNewsSet()
         {
-            return db.NewsSet;
+            return db.NewsSet.Include(m => m.Author);
         }
 
         [ResponseType(typeof(News))]
@@ -27,7 +27,7 @@ namespace NewsWeb.Controllers.api
         [HttpGet]
         public IHttpActionResult Search(string authorName)
         {
-            List<News> news = db.NewsSet.Where(n => n.Author.Name.Contains(authorName)).ToList();
+            List<News> news = db.NewsSet.Where(n => n.Author.Name.Contains(authorName)).Include(m => m.Author).ToList();
             if (news == null)
             {
                 return NotFound();
