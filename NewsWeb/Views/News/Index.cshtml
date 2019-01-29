@@ -31,7 +31,7 @@
             @Html.DisplayNameFor(model => model.ImageUrl)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Author)
+            @Html.DisplayNameFor(model => model.AuthorId)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.PublicationDate)
@@ -57,7 +57,7 @@
                     @Html.DisplayFor(modelItem => item.ImageUrl)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Author)
+                    @Html.DisplayFor(modelItem => item.Author.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PublicationDate)
@@ -132,7 +132,7 @@ else
                         row += "<td>" + item.ArticleTitle + "</td>";
                         row += "<td>" + item.ArticleBody + "</td>";
                         row += "<td>" + item.ImageUrl + "</td>";
-                        row += "<td>" + item.AuthorName + "</td>";
+                        row += "<td>" + item.Author.Name + "</td>";
                         row += "<td>" + item.PublicationDate + "</td>";
                         row += "<td>" + item.CreationDate + "</td>";
 

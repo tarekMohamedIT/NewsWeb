@@ -17,7 +17,9 @@ namespace NewsWeb.Controllers
         // GET: News
         public ActionResult Index()
         {
-            return View(db.NewsSet.ToList());
+            var data = db.NewsSet.Include(m => m.Author).ToList();
+
+            return View(data);
         }
 
         // GET: News/Details/5
@@ -27,7 +29,7 @@ namespace NewsWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            News news = db.NewsSet.Find(id);
+            News news = db.NewsSet.Include(m => m.Author).FirstOrDefault(m => m.NewsID == id);
             if (news == null)
             {
                 return HttpNotFound();
@@ -53,9 +55,9 @@ namespace NewsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(News news)
         {
-            
             if (ModelState.IsValid)
             {
+                news.CreationDate = DateTime.Today;
                 db.NewsSet.Add(news);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -83,7 +85,14 @@ namespace NewsWeb.Controllers
             {
                 return HttpNotFound();
             }
-            return View(news);
+
+            var viewModel = new NewsViewModel()
+            {
+                News = news,
+                Authors = db.AuthorsSet.ToList()
+            };
+
+            return View(viewModel);
         }
 
         // POST: News/Edit/5
@@ -91,15 +100,35 @@ namespace NewsWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "NewsID,ArticleTitle,ArticleBody,ImageUrl,AuthorName,PublicationDate,CreationDate")] News news)
+        public ActionResult Edit(News news)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(news).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                News currentNews = db.NewsSet.First(m => m.NewsID == news.NewsID);
+
+                if (currentNews == null)
+                    return HttpNotFound();
+
+                else
+                {
+                    currentNews.ArticleTitle = news.ArticleTitle;
+                    currentNews.ArticleBody = news.ArticleBody;
+                    currentNews.ImageUrl = news.ImageUrl;
+                    currentNews.AuthorId = news.AuthorId;
+                    currentNews.PublicationDate = news.PublicationDate;
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-            return View(news);
+
+            var viewModel = new NewsViewModel()
+            {
+                News = news,
+                Authors = db.AuthorsSet.ToList()
+            };
+
+            return View(viewModel);
         }
 
         // GET: News/Delete/5
@@ -126,6 +155,20 @@ namespace NewsWeb.Controllers
             db.NewsSet.Remove(news);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult View(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            News news = db.NewsSet.Include(m => m.Author).FirstOrDefault(m => m.NewsID == id);
+            if (news == null)
+            {
+                return HttpNotFound();
+            }
+            return View(news);
         }
 
         protected override void Dispose(bool disposing)

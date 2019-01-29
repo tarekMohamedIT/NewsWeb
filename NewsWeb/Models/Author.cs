@@ -11,7 +11,10 @@ namespace NewsWeb.Models
         public int AuthorID { get; set; }
 
         [Required]
-        [RegularExpression("\\w{2, 20}", ErrorMessage = "This field is in incorrect format")]
+        [MinLength(2, ErrorMessage = "The name is too short, it must be at least 2 characters.")]
+        [MaxLength(20, ErrorMessage ="The name is too long, it must be at most 20 characters.")]
+        [RegularExpression("([A-Za-z]|\\s)+", ErrorMessage = "This field is in incorrect format")]
+        
         public string Name { get; set; }
     }
 }

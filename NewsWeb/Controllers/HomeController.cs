@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NewsWeb.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,14 @@ namespace NewsWeb.Controllers
 {
     public class HomeController : Controller
     {
+        private ApplicationDbContext _context = new ApplicationDbContext();
+
+
+
         public ActionResult Index()
         {
-            return View();
+            List<News> newsList =  _context.NewsSet.Where(m => m.PublicationDate <= DateTime.Now).ToList();
+            return View(newsList);
         }
 
         public ActionResult About()

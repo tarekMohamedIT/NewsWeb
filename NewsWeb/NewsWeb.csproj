@@ -243,6 +243,10 @@
     <Compile Include="Migrations\201901251133003_addedValidators.Designer.cs">
       <DependentUpon>201901251133003_addedValidators.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901290724021_updatedNewsParams.cs" />
+    <Compile Include="Migrations\201901290724021_updatedNewsParams.Designer.cs">
+      <DependentUpon>201901290724021_updatedNewsParams.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Author.cs" />
@@ -369,6 +373,7 @@
     <Content Include="Views\Authors\Details.cshtml" />
     <Content Include="Views\Authors\Edit.cshtml" />
     <Content Include="Views\Authors\Index.cshtml" />
+    <Content Include="Views\News\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -394,6 +399,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901251133003_addedValidators.resx">
       <DependentUpon>201901251133003_addedValidators.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901290724021_updatedNewsParams.resx">
+      <DependentUpon>201901290724021_updatedNewsParams.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

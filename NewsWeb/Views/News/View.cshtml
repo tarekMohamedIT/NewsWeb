@@ -1,0 +1,13 @@
+﻿@model NewsWeb.Models.News
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.ArticleTitle</h2>
+<h4>By : @Model.Author.Name</h4>
+<h6>@Model.PublicationDate</h6>
+
+<img class="centered" src="@Model.ImageUrl" alt="News image" />
+
+<p>@Model.ArticleBody</p>
