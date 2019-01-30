@@ -51,15 +51,31 @@ namespace NewsWeb.Controllers
         // POST: News/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(News news)
+        public ActionResult Create(News news, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
+                
+
                 news.CreationDate = DateTime.Today;
                 db.NewsSet.Add(news);
                 db.SaveChanges();
+
+                if (file != null)
+                {
+                    string path = "~/images/" + news.NewsID + "_" + System.IO.Path.GetFileName(file.FileName);
+
+                    string path2 = HttpContext.Server.MapPath("~/Images/")
+                                                  + news.NewsID + "_" + file.FileName;
+                    // file is uploaded
+                    file.SaveAs(path2);
+                    news.ImageUrl = "/Images/" + news.NewsID + "_" + file.FileName;
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -69,7 +85,7 @@ namespace NewsWeb.Controllers
                 Authors = db.AuthorsSet.ToList()
             };
 
-            
+
             return View(viewModel);
         }
 
@@ -100,7 +116,7 @@ namespace NewsWeb.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(News news)
+        public ActionResult Edit(News news, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
@@ -111,6 +127,15 @@ namespace NewsWeb.Controllers
 
                 else
                 {
+                    if (file != null)
+                    {
+                        string path2 = HttpContext.Server.MapPath("~/Images/")
+                                                      + news.NewsID + "_" + file.FileName;
+                        // file is uploaded
+                        file.SaveAs(path2);
+                        news.ImageUrl = "/Images/" + news.NewsID + "_" + file.FileName;
+                    }
+
                     currentNews.ArticleTitle = news.ArticleTitle;
                     currentNews.ArticleBody = news.ArticleBody;
                     currentNews.ImageUrl = news.ImageUrl;

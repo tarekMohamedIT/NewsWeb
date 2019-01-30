@@ -68,7 +68,7 @@
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.NewsID }) |
                     @Html.ActionLink("Details", "Details", new { id = item.NewsID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.NewsID })
+                    <a>Delete</a> item.NewsID })
                 </td>
             </tr>
         }
@@ -103,7 +103,7 @@ else
 
                         row += "<td><a href='/News/Edit/" + item.NewsID + "'>Edit</a></td>";
                         row += "<td><a href='/News/Details/" + item.NewsID + "'>Details</a></td>";
-                        row += "<td><a href='/News/Delete/" + item.NewsID + "'>Delete</a></td>";
+                        row += "<td><a class='delete' href='' data-id='" + item.NewsID + "'>Delete</a></td>";
 
                         row += "</tr>";
                     });
@@ -112,15 +112,7 @@ else
             });
         }
 
-
-
-        $(document).ready(function () {
-            $("#searchFor").click(function () {
-
-                search($("#authorName").val());
-
-            });
-
+        function readAllData() {
             $.ajax({
                 url: "/api/news",
                 type: 'GET',
@@ -138,13 +130,46 @@ else
 
                         row += "<td><a href='/News/Edit/" + item.NewsID + "'>Edit</a></td>";
                         row += "<td><a href='/News/Details/" + item.NewsID + "'>Details</a></td>";
-                        row += "<td><a href='/News/Delete/" + item.NewsID + "'>Delete</a></td>";
+                        row += "<td><a class='delete' href='#' onClick='showDiv(" + item.NewsID + ");'>Delete</a></td>";
 
                         row += "</tr>";
                     });
                     $("#articles").html(row);
                 }
             });
+        }
+
+        function showDiv(pageid) {
+            if (confirm("Do you want to delete number " + pageid + "?")) {
+                $.ajax({
+                    // edit to add steve's suggestion.
+                    //url: "/ControllerName/ActionName",
+                    url: '/api/News/' + pageid,
+                    type: 'DELETE',
+                    success: function (data) {
+                        readAllData();
+                        alert("Done");
+                    }
+                });
+            }
+        }
+
+
+        $(document).ready(function () {
+            readAllData();
+
+            $("#searchFor").click(function () {
+
+                search($("#authorName").val());
+
+            });
+
+            $("a.delete").click(function (e) {
+
+                alert("test");
+            });
+
+
         });
     </script>    
     

@@ -16,19 +16,69 @@
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th></th>
+        <th></th>
+        <th></th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AuthorID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AuthorID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AuthorID })
-        </td>
-    </tr>
-}
-
+    <tbody id="authors"></tbody>
 </table>
+
+@section scripts{
+
+    <script>
+
+        function readAllData() {
+            $.ajax({
+                url: "/api/authors",
+                type: 'GET',
+                success: function (data) {
+                    var row = "";
+                    $.each(data, function (index, item) {
+                        row += "<tr>"
+
+                        row += "<td>" + item.Name + "</td>";
+
+                        row += "<td><a href='/Authors/Edit/" + item.AuthorID + "'>Edit</a></td>";
+                        row += "<td><a href='/Authors/Details/" + item.AuthorID + "'>Details</a></td>";
+                        row += "<td><a class='delete' href='#' onClick='deleteAuthor(" + item.AuthorID + ");'>Delete</a></td>";
+
+                        row += "</tr>";
+                    });
+                    $("#authors").html(row);
+                }
+            });
+        }
+
+        function deleteAuthor(pageid) {
+            if (confirm("Do you want to delete author number " + pageid + "?")) {
+                $.ajax({
+                    // edit to add steve's suggestion.
+                    //url: "/ControllerName/ActionName",
+                    url: '/api/authors/' + pageid,
+                    type: 'DELETE',
+                    success: function (response) {
+
+                        if (response.success) {
+                            alert(response.responseText);
+                            readAllData();
+                        } else {
+                            // DoSomethingElse()
+                            alert(response.responseText);
+                        }
+
+                    },
+                    error: function (response) {
+
+                        
+                    }
+                });
+            }
+        }
+
+
+        $(document).ready(function () {
+            readAllData();
+
+        });
+
+    </script>
+}
